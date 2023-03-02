@@ -50,9 +50,10 @@ export function Home() {
       <FlatList
         data={quizzes}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <QuizCard
             data={item}
+            index={index}
             onPress={() => navigate('quiz', { id: item.id })}
           />
         )}
