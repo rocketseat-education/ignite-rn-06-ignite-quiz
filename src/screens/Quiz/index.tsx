@@ -9,7 +9,8 @@ import Animated, {
   withTiming,
   interpolate,
   Extrapolate,
-  Easing
+  Easing,
+  useAnimatedScrollHandler
 } from 'react-native-reanimated';
 
 import { styles } from './styles';
@@ -37,6 +38,7 @@ export function Quiz() {
   const [alternativeSelected, setAlternativeSelected] = useState<null | number>(null);
 
   const shake = useSharedValue(0);
+  const scrollY = useSharedValue(0);
 
   const { navigate } = useNavigation();
 
@@ -122,6 +124,12 @@ export function Quiz() {
     }
   })
 
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y
+    }
+  })
+
   useEffect(() => {
     const quizSelected = QUIZ.filter(item => item.id === id)[0];
     setQuiz(quizSelected);
@@ -134,9 +142,11 @@ export function Quiz() {
 
   return (
     <View style={styles.container}>
-      <ScrollView
+      <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.question}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
       >
         <QuizHeader
           title={quiz.title}
@@ -157,7 +167,7 @@ export function Quiz() {
           <OutlineButton title="Parar" onPress={handleStop} />
           <ConfirmButton onPress={handleConfirm} />
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </View >
   );
 }
