@@ -45,6 +45,8 @@ export function Quiz() {
   const [quiz, setQuiz] = useState<QuizProps>({} as QuizProps);
   const [alternativeSelected, setAlternativeSelected] = useState<null | number>(null);
 
+  const [statusReply, setStatusReply] = useState(0);
+
   const shake = useSharedValue(0);
   const scrollY = useSharedValue(0);
   const cardPosition = useSharedValue(0);
@@ -90,8 +92,10 @@ export function Quiz() {
     }
 
     if (quiz.questions[currentQuestion].correct === alternativeSelected) {
+      setStatusReply(1);
       setPoints(prevState => prevState + 1);
     } else {
+      setStatusReply(2);
       shakeAnimation();
     }
 
@@ -201,7 +205,7 @@ export function Quiz() {
   return (
     <View style={styles.container}>
 
-      <OverlayFeedback status={0} />
+      <OverlayFeedback status={statusReply} />
 
       <Animated.View
         style={fixedProgressBarStyles}
